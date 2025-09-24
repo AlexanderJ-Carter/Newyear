@@ -46,8 +46,14 @@ dist/
 
 # 文档文件 (仅保存在本地)
 PROJECT_README.md
+CONFIG.md
+DEPLOY.md
+FILE_ORGANIZATION.md
 docs/
 documentation/
 说明*.md
 README_*.md
 *.txt
+
+# 保留 README.md（项目主文档）
+!README.md
