@@ -394,9 +394,14 @@ class LocalFeatures {
 
     // 重置上传表单
     resetUploadForm() {
-        document.getElementById('uploadTitle').value = '';
-        document.getElementById('uploadDescription').value = '';
-        document.getElementById('fileInput').value = '';
+        const uploadTitle = document.getElementById('uploadTitle');
+        const uploadDescription = document.getElementById('uploadDescription');
+        const fileInput = document.getElementById('fileInput');
+        
+        if (uploadTitle) uploadTitle.value = '';
+        if (uploadDescription) uploadDescription.value = '';
+        if (fileInput) fileInput.value = '';
+        
         this.selectedFile = null;
 
         const uploadArea = document.getElementById('fileUploadArea');
