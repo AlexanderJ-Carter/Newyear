@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>春节记忆馆 - 2026马年新春纪念</title>
+    <meta name="description" content="记录春节美好时光，传承中华文化，与您一同迎接马年新春">
+    <meta name="keywords" content="春节记忆,新春纪念,2026,马年,中华文化,传统节日">
+
+    <!-- 字体引入 -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="assets/css/main.css">
+
+    <!-- 图标 -->
+    <link rel="icon" href="assets/images/newyear-icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="assets/images/newyear-icon.svg">
+</head>
+
+<body>
+    <!-- 背景动画容器 -->
+    <div class="background-container">
+        <div class="floating-elements"></div>
+        <div class="gradient-overlay"></div>
+    </div>
+
+    <!-- 音乐控制 -->
+    <div class="music-control" id="musicControl">
+        <button class="music-btn" id="musicBtn" aria-label="控制背景音乐">
+            <span class="music-icon">♫</span>
+        </button>
+        <audio id="backgroundMusic" loop preload="metadata">
+            <source src="assets/audio/祖海 - 好运来_L.mp3" type="audio/mpeg">
+            <source src="assets/audio/哔哩哔哩_2026新春必备_十首经典好听新年歌曲合集，春节祝福、过年喜庆、年味十足_【循环播放__113855.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- 主要内容 -->
+    <main class="main-container">
+        <!-- 头部标题 -->
+        <header class="header">
+            <h1 class="main-title">
+                <span class="title-text">春节记忆馆</span>
+                <span class="title-year">2026马年</span>
+            </h1>
+            <p class="subtitle">记录美好时光，传承中华文化</p>
+        </header>
+
+        <!-- 倒计时区域 -->
+        <section class="countdown-section">
+            <div class="countdown-container">
+                <div class="countdown-item">
+                    <div class="countdown-number" id="days">00</div>
+                    <div class="countdown-label">天</div>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="hours">00</div>
+                    <div class="countdown-label">时</div>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="minutes">00</div>
+                    <div class="countdown-label">分</div>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="seconds">00</div>
+                    <div class="countdown-label">秒</div>
+                </div>
+            </div>
+            <div class="countdown-message" id="countdownMessage">
+                距离2026年春节还有
+            </div>
+        </section>
+
+        <!-- 祝福语区域 -->
+        <section class="blessing-section">
+            <div class="blessing-container">
+                <div class="blessing-item active" data-blessing="0">
+                    <p class="blessing-text">马年大吉，万事如意</p>
+                    <span class="blessing-subtitle">Horse Year Prosperity</span>
+                </div>
+                <div class="blessing-item" data-blessing="1">
+                    <p class="blessing-text">新春快乐，阖家欢乐</p>
+                    <span class="blessing-subtitle">Happy Spring Festival</span>
+                </div>
+                <div class="blessing-item" data-blessing="2">
+                    <p class="blessing-text">岁岁年年，平安喜乐</p>
+                    <span class="blessing-subtitle">Peace and Joy Every Year</span>
+                </div>
+                <div class="blessing-item" data-blessing="3">
+                    <p class="blessing-text">马到成功，前程似锦</p>
+                    <span class="blessing-subtitle">Success and Bright Future</span>
+                </div>
+            </div>
+            <div class="blessing-dots">
+                <span class="dot active" data-slide="0"></span>
+                <span class="dot" data-slide="1"></span>
+                <span class="dot" data-slide="2"></span>
+                <span class="dot" data-slide="3"></span>
+            </div>
+        </section>
+
+        <!-- 春节宣传视频区域 -->
+        <section class="video-section">
+            <div class="video-container">
+                <div class="video-header">
+                    <h2 class="video-title">🎬 春节映像</h2>
+                    <p class="video-subtitle">感受浓浓年味，聆听新春序曲</p>
+                </div>
+                <div class="video-grid">
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <video controls preload="metadata">
+                                <source src="assets/宣传片.mp4" type="video/mp4">
+                                您的浏览器不支持视频播放
+                            </video>
+                            <div class="video-overlay">
+                                <h3>春节宣传片</h3>
+                                <p>感受传统春节的魅力与温暖</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <video controls preload="metadata">
+                                <source src="assets/年味.mp4" type="video/mp4">
+                                您的浏览器不支持视频播放
+                            </video>
+                            <div class="video-overlay">
+                                <h3>浓浓年味</h3>
+                                <p>体验传统年俗的独特魅力</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 春节介绍区域 -->
+        <section class="festival-intro-section">
+            <div class="intro-container">
+                <div class="intro-header">
+                    <h2 class="intro-title">🎊 2026马年春节</h2>
+                    <p class="intro-subtitle">传统佳节，文化传承</p>
+                </div>
+                <div class="intro-content">
+                    <div class="intro-card festival-overview">
+                        <div class="card-icon">🏮</div>
+                        <h3>节日概览</h3>
+                        <p>春节，即农历新年，是中华民族最重要的传统节日。2026年春节将在2月17日到来，标志着丙午马年的开始。</p>
+                    </div>
+                    <div class="intro-card zodiac-info">
+                        <div class="card-icon">🐎</div>
+                        <h3>马年寓意</h3>
+                        <p>马象征着奔腾向前、积极进取。马年出生的人通常性格开朗、热情奔放，具有不屈不挠的精神。</p>
+                    </div>
+                    <div class="intro-card traditions">
+                        <div class="card-icon">🎋</div>
+                        <h3>传统习俗</h3>
+                        <p>贴春联、放鞭炮、吃团圆饭、拜年送祝福...这些传统习俗承载着中华民族的文化记忆。</p>
+                    </div>
+                </div>
+                <div class="learn-more">
+                    <button class="learn-more-btn" id="learnMoreBtn">
+                        <span>走进春节文化殿堂</span>
+                        <span class="btn-arrow">→</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 春节记录区域 -->
+        <section class="memories-section">
+            <div class="memories-container">
+                <div class="section-header">
+                    <h2 class="section-title">🎁 春节时光宝盒</h2>
+                    <p class="section-subtitle">珍藏美好瞬间，记录温暖回忆</p>
+                </div>
+                <div class="memories-grid">
+                    <div class="memory-card text-memory">
+                        <div class="memory-header">
+                            <div class="memory-icon">✍️</div>
+                            <h3>文字记录</h3>
+                        </div>
+                        <div class="memory-content">
+                            <div class="placeholder-content">
+                                <p class="placeholder-text">在这里记录您的春节感想、家人团聚的温馨时刻、新年愿望...</p>
+                                <button class="add-memory-btn" data-type="text">
+                                    <span>+</span>
+                                    <span>添加文字记录</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="memory-card photo-memory">
+                        <div class="memory-header">
+                            <div class="memory-icon">📸</div>
+                            <h3>图片记忆</h3>
+                        </div>
+                        <div class="memory-content">
+                            <div class="photo-placeholder">
+                                <div class="placeholder-image">
+                                    <div class="placeholder-icon">🖼️</div>
+                                    <p>春节美好瞬间</p>
+                                </div>
+                                <button class="add-memory-btn" data-type="photo">
+                                    <span>+</span>
+                                    <span>添加照片</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="memory-card video-memory">
+                        <div class="memory-header">
+                            <div class="memory-icon">🎬</div>
+                            <h3>视频记录</h3>
+                        </div>
+                        <div class="memory-content">
+                            <div class="video-placeholder">
+                                <div class="placeholder-video">
+                                    <div class="placeholder-icon">🎥</div>
+                                    <p>珍贵视频时刻</p>
+                                </div>
+                                <button class="add-memory-btn" data-type="video">
+                                    <span>+</span>
+                                    <span>添加视频</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 传统元素装饰 -->
+        <section class="decoration-section">
+            <div class="lantern-container">
+                <div class="lantern lantern-left"></div>
+                <div class="lantern lantern-right"></div>
+            </div>
+            <div class="cherry-blossom">
+                <div class="petal petal-1"></div>
+                <div class="petal petal-2"></div>
+                <div class="petal petal-3"></div>
+                <div class="petal petal-4"></div>
+                <div class="petal petal-5"></div>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>© 2025 Alexander.xin | 愿您新年快乐，心想事成</p>
+                <div class="footer-links">
+                    <a href="knowledge.html" class="footer-link">📚 文化殿堂</a>
+                    <span class="footer-separator">|</span>
+                    <a href="memories.html" class="footer-link">🎁 时光宝盒</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>

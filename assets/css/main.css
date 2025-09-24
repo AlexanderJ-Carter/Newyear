@@ -1,0 +1,1359 @@
+/* ==========================================================================
+   新春倒计时网页样式
+   设计理念：现代优雅 + 传统元素
+   ========================================================================== */
+
+/* 基础重置和变量 */
+:root {
+    /* 配色方案 - 暖色调现代风格 */
+    --primary-color: #d4af37; /* 金色 */
+    --secondary-color: #e74c3c; /* 中国红 */
+    --accent-color: #f39c12; /* 暖橙色 */
+    --text-primary: #2c3e50; /* 深灰蓝 */
+    --text-secondary: #7f8c8d; /* 中灰 */
+    --text-light: #ecf0f1; /* 浅色文字 */
+    --background-primary: #fdfcfc; /* 米白色 */
+    --background-secondary: #f8f9fa; /* 浅灰白 */
+    --border-color: #e9ecef; /* 边框色 */
+
+    /* 渐变色 */
+    --gradient-warm: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+    --gradient-red: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-gold: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+
+    /* 阴影 */
+    --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.15);
+    --shadow-heavy: 0 8px 30px rgba(0, 0, 0, 0.2);
+
+    /* 字体 */
+    --font-primary: 'Noto Serif SC', serif;
+    --font-secondary: 'Inter', sans-serif;
+
+    /* 动画时间 */
+    --animation-fast: 0.3s;
+    --animation-normal: 0.5s;
+    --animation-slow: 1s;
+}
+
+/* 基础样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background: var(--background-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* 背景容器 */
+.background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ffd1dc 100%);
+    transition: background 2s ease;
+}
+
+/* 倒计时阶段背景 */
+.background-container.countdown-100 {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+}
+
+.background-container.countdown-30 {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 50%, #fa709a 100%);
+}
+
+.background-container.countdown-10 {
+    background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%);
+}
+
+.background-container.countdown-1 {
+    background: linear-gradient(135deg, #ee0979 0%, #ff6a00 50%, #ee0979 100%);
+    animation: celebration-bg 3s ease-in-out infinite;
+}
+
+@keyframes celebration-bg {
+    0%,
+    100% {
+        filter: brightness(1);
+    }
+    50% {
+        filter: brightness(1.2);
+    }
+}
+
+.gradient-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        rgba(255, 255, 255, 0.1) 100%
+    );
+    z-index: -1;
+}
+
+/* 浮动元素动画背景 */
+.floating-elements {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.floating-elements::before,
+.floating-elements::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+    animation: float 20s infinite linear;
+}
+
+.floating-elements::before {
+    width: 200px;
+    height: 200px;
+    background: var(--primary-color);
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.floating-elements::after {
+    width: 150px;
+    height: 150px;
+    background: var(--secondary-color);
+    top: 60%;
+    right: 10%;
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    33% {
+        transform: translateY(-30px) rotate(120deg);
+    }
+    66% {
+        transform: translateY(30px) rotate(240deg);
+    }
+}
+
+/* 音乐控制 */
+.music-control {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.music-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--primary-color);
+    box-shadow: var(--shadow-light);
+    transition: all var(--animation-fast) ease;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.music-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: scale(1.1);
+    box-shadow: var(--shadow-medium);
+}
+
+.music-btn.playing .music-icon {
+    animation: musicPulse 1s infinite;
+}
+
+@keyframes musicPulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+/* 主容器调整，移除导航栏后的正常padding */
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px 40px; /* 恢复正常顶部padding */
+    position: relative;
+    z-index: 1;
+}
+
+/* 头部标题 */
+.header {
+    text-align: center;
+    margin-bottom: 60px;
+    animation: fadeInUp 1s ease-out;
+}
+
+.main-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.title-text {
+    display: block;
+    background: linear-gradient(
+        135deg,
+        var(--primary-color),
+        var(--accent-color)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.title-year {
+    display: block;
+    font-size: 0.6em;
+    color: var(--secondary-color);
+    font-weight: 400;
+    margin-top: 10px;
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    font-family: var(--font-secondary);
+    font-weight: 300;
+}
+
+/* 倒计时区域 */
+.countdown-section {
+    text-align: center;
+    margin-bottom: 80px;
+    animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+.countdown-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 25px 20px;
+    box-shadow: var(--shadow-light);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    min-width: 100px;
+    transition: transform var(--animation-fast) ease;
+}
+
+.countdown-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-medium);
+}
+
+.countdown-number {
+    font-size: 3rem;
+    font-weight: 700;
+    font-family: var(--font-secondary);
+    background: linear-gradient(
+        135deg,
+        var(--primary-color),
+        var(--accent-color)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.countdown-label {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.countdown-separator {
+    font-size: 2rem;
+    color: var(--primary-color);
+    font-weight: 700;
+    animation: pulse 2s infinite;
+}
+
+.countdown-message {
+    font-size: 1.3rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 15px 30px;
+    border-radius: 30px;
+    display: inline-block;
+    box-shadow: var(--shadow-light);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+}
+
+/* 祝福语区域 */
+.blessing-section {
+    margin-bottom: 80px;
+    animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+.blessing-container {
+    position: relative;
+    height: 120px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-light);
+    margin-bottom: 30px;
+}
+
+.blessing-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all var(--animation-normal) ease;
+    padding: 20px;
+}
+
+.blessing-item.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.blessing-text {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.blessing-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-family: var(--font-secondary);
+    font-style: italic;
+    font-weight: 300;
+}
+
+.blessing-dots {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.3);
+    cursor: pointer;
+    transition: all var(--animation-fast) ease;
+}
+
+.dot.active,
+.dot:hover {
+    background: var(--primary-color);
+    transform: scale(1.2);
+}
+
+/* 装饰元素 */
+.decoration-section {
+    position: relative;
+    height: 200px;
+    margin-bottom: 60px;
+    animation: fadeInUp 1s ease-out 0.6s both;
+}
+
+.lantern-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.lantern {
+    position: absolute;
+    width: 60px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--secondary-color), #c0392b);
+    border-radius: 30px 30px 40px 40px;
+    box-shadow: var(--shadow-medium);
+    animation: swing 3s ease-in-out infinite;
+}
+
+.lantern::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background: var(--primary-color);
+    border-radius: 50%;
+}
+
+.lantern::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 20px;
+    background: linear-gradient(135deg, var(--accent-color), #e67e22);
+    border-radius: 50%;
+}
+
+.lantern-left {
+    top: 20px;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.lantern-right {
+    top: 20px;
+    right: 10%;
+    animation-delay: 1.5s;
+}
+
+@keyframes swing {
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(3deg);
+    }
+    75% {
+        transform: rotate(-3deg);
+    }
+}
+
+/* 樱花花瓣 */
+.cherry-blossom {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.petal {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #ffb6c1, #ffc0cb);
+    border-radius: 50% 0;
+    opacity: 0.7;
+    animation: fall 10s infinite linear;
+}
+
+.petal-1 {
+    left: 10%;
+    animation-delay: 0s;
+}
+.petal-2 {
+    left: 30%;
+    animation-delay: 2s;
+}
+.petal-3 {
+    left: 50%;
+    animation-delay: 4s;
+}
+.petal-4 {
+    left: 70%;
+    animation-delay: 6s;
+}
+.petal-5 {
+    left: 90%;
+    animation-delay: 8s;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.7;
+    }
+    90% {
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(300px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* 春节介绍区域 */
+.festival-intro-section {
+    margin-bottom: 80px;
+    animation: fadeInUp 1s ease-out 0.6s both;
+}
+
+.intro-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.intro-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.intro-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(
+        135deg,
+        var(--primary-color),
+        var(--secondary-color)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 15px;
+}
+
+.intro-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    font-family: var(--font-secondary);
+}
+
+.intro-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.intro-card {
+    background: rgba(255, 255, 255, 0.9);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    padding: 30px 25px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-light);
+    text-align: center;
+    transition: all var(--animation-fast) ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.intro-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-medium);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.intro-card .card-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.intro-card h3 {
+    font-size: 1.4rem;
+    color: var(--text-primary);
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.intro-card p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-size: 1rem;
+}
+
+.learn-more {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.learn-more-btn {
+    background: linear-gradient(
+        135deg,
+        var(--primary-color),
+        var(--accent-color)
+    );
+    color: white;
+    border: none;
+    padding: 15px 35px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow-light);
+    transition: all var(--animation-fast) ease;
+    font-family: var(--font-primary);
+}
+
+.learn-more-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+    background: linear-gradient(
+        135deg,
+        var(--accent-color),
+        var(--primary-color)
+    );
+}
+
+.learn-more-btn .btn-arrow {
+    font-size: 1.2rem;
+    transition: transform var(--animation-fast) ease;
+}
+
+.learn-more-btn:hover .btn-arrow {
+    transform: translateX(5px);
+}
+
+/* 春节记录区域 */
+.memories-section {
+    margin-bottom: 80px;
+    animation: fadeInUp 1s ease-out 0.8s both;
+}
+
+.memories-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 15px;
+}
+
+.section-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-family: var(--font-secondary);
+}
+
+.memories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.memory-card {
+    background: rgba(255, 255, 255, 0.9);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: var(--shadow-light);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all var(--animation-fast) ease;
+}
+
+.memory-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-medium);
+}
+
+.memory-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.2);
+}
+
+.memory-icon {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+        135deg,
+        var(--primary-color),
+        var(--accent-color)
+    );
+    border-radius: 12px;
+    color: white;
+}
+
+.memory-header h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.memory-content {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placeholder-content {
+    text-align: center;
+    width: 100%;
+}
+
+.placeholder-text {
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.photo-placeholder,
+.video-placeholder {
+    text-align: center;
+    width: 100%;
+}
+
+.placeholder-image,
+.placeholder-video {
+    width: 100%;
+    height: 150px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    border: 2px dashed rgba(212, 175, 55, 0.3);
+    transition: all var(--animation-fast) ease;
+}
+
+.placeholder-image:hover,
+.placeholder-video:hover {
+    border-color: var(--primary-color);
+    background: linear-gradient(135deg, #ffecd2, #fcb69f);
+}
+
+.placeholder-icon {
+    font-size: 3rem;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+}
+
+.placeholder-image p,
+.placeholder-video p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.add-memory-btn {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all var(--animation-fast) ease;
+    font-family: var(--font-primary);
+}
+
+.add-memory-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-light);
+}
+
+.add-memory-btn span:first-child {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* 页脚 */
+.footer {
+    text-align: center;
+    padding: 40px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.5);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    margin-top: 40px;
+    animation: fadeInUp 1s ease-out 0.8s both;
+}
+
+.footer-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+    font-family: var(--font-secondary);
+}
+
+.separator {
+    margin: 0 15px;
+    color: var(--primary-color);
+}
+
+.footer-links {
+    margin-top: 15px;
+}
+
+.footer-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    font-family: var(--font-secondary);
+    transition: all var(--animation-fast) ease;
+}
+
+.footer-link:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
+/* 动画定义 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .main-container {
+        padding: 20px 15px;
+    }
+
+    .countdown-container {
+        gap: 10px;
+    }
+
+    .countdown-item {
+        padding: 20px 15px;
+        min-width: 80px;
+    }
+
+    .countdown-number {
+        font-size: 2.5rem;
+    }
+
+    .countdown-separator {
+        font-size: 1.5rem;
+    }
+
+    .blessing-text {
+        font-size: 1.4rem;
+    }
+
+    .lantern {
+        width: 40px;
+        height: 60px;
+    }
+
+    .music-control {
+        top: 15px;
+        right: 15px;
+    }
+
+    .music-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+
+    /* 响应式介绍区域 */
+    .intro-title {
+        font-size: 2rem;
+    }
+
+    .intro-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .intro-card {
+        padding: 25px 20px;
+    }
+
+    /* 响应式记录区域 */
+    .section-title {
+        font-size: 1.8rem;
+    }
+
+    .memories-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .memory-card {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .countdown-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .countdown-separator {
+        display: none;
+    }
+
+    .countdown-item {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .blessing-text {
+        font-size: 1.2rem;
+    }
+
+    .decoration-section {
+        height: 150px;
+    }
+}
+
+/* 新年到来后的样式 */
+.new-year-celebration {
+    animation: celebration 2s ease-in-out;
+}
+
+@keyframes celebration {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.fireworks {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+}
+
+.firework {
+    position: absolute;
+    border-radius: 50%;
+    animation: explode 1s ease-out;
+}
+
+@keyframes explode {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+/* 导航栏样式 */
+.main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    z-index: 200;
+    padding: 15px 0;
+    transform: translateY(0);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 1;
+}
+
+.main-nav.nav-hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+}
+
+.main-nav.nav-compact {
+    padding: 10px 0;
+    background: rgba(255, 255, 255, 0.98);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    transition: font-size 0.3s ease;
+}
+
+.nav-compact .nav-brand {
+    font-size: 1.1rem;
+}
+
+.nav-icon {
+    font-size: 1.5rem;
+    transition: font-size 0.3s ease;
+}
+
+.nav-compact .nav-icon {
+    font-size: 1.3rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    transition: gap 0.3s ease;
+}
+
+.nav-compact .nav-links {
+    gap: 15px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    font-weight: 500;
+    transition: all var(--animation-fast) ease;
+    border: 2px solid transparent;
+}
+
+.nav-compact .nav-link {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+}
+
+.nav-link:hover {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.nav-link.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.link-icon {
+    font-size: 1.1rem;
+    transition: font-size 0.3s ease;
+}
+
+.nav-compact .link-icon {
+    font-size: 1rem;
+}
+
+/* 主容器调整，为导航栏留出空间 */
+.main-container {
+    padding-top: 80px;
+    transition: padding-top 0.3s ease;
+}
+
+/* 响应式导航栏 */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .nav-links {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .nav-link {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+    }
+
+    .main-container {
+        padding-top: 120px;
+    }
+}
+
+/* 视频展示区域 */
+.video-section {
+    margin: 80px 0;
+    position: relative;
+    z-index: 2;
+}
+
+.video-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.video-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.video-title {
+    font-size: 2.5rem;
+    color: var(--accent-primary);
+    margin-bottom: 15px;
+    background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.video-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    align-items: start;
+}
+
+.video-item {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow-medium);
+    transition: all var(--animation-normal) ease;
+    background: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.video-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-heavy);
+}
+
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9; /* 使用16:9比例 */
+    overflow: hidden;
+    border-radius: 15px;
+    background: #000; /* 视频未加载时的背景 */
+}
+
+.video-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* 改为contain以显示完整视频 */
+    display: block;
+    background: #000;
+}
+
+/* 确保视频加载前有正确的尺寸 */
+.video-item video:not([src]) {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.video-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    color: white;
+    padding: 25px 20px 20px;
+    transform: translateY(100%);
+    transition: transform var(--animation-normal) ease;
+}
+
+.video-item:hover .video-overlay {
+    transform: translateY(0);
+}
+
+.video-overlay h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.video-overlay p {
+    margin: 0;
+    font-size: 0.95rem;
+    opacity: 0.9;
+    line-height: 1.4;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .video-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .video-wrapper {
+        aspect-ratio: 16/9; /* 移动端也保持16:9比例 */
+    }
+
+    .video-title {
+        font-size: 2rem;
+    }
+
+    .video-overlay {
+        position: static;
+        transform: none;
+        background: rgba(0, 0, 0, 0.8);
+    }
+}
+
+/* 统一页脚样式 */
+.footer {
+    margin-top: 60px;
+    padding: 30px 20px;
+    background: rgba(0, 0, 0, 0.05);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.footer .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer p {
+    margin: 0 0 15px 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.footer .footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.footer .footer-link {
+    color: var(--accent-primary);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.footer .footer-link:hover {
+    background: var(--accent-primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.footer .footer-separator {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
