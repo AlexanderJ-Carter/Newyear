@@ -655,3 +655,66 @@
         justify-content: center;
     }
 }
+
+/* ==========================================================================
+   用户上传内容样式
+   ========================================================================== */
+
+/* 上传标识徽章 */
+.upload-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: linear-gradient(135deg, #4caf50, #45a049);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: 500;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+/* 用户上传的记忆项样式区分 */
+.memory-item.upload-item {
+    border-left: 4px solid #4caf50;
+    box-shadow: 0 4px 20px rgba(76, 175, 80, 0.1);
+}
+
+.memory-item.upload-item:hover {
+    box-shadow: 0 8px 30px rgba(76, 175, 80, 0.2);
+    transform: translateY(-2px);
+}
+
+/* 存储位置信息 */
+.memory-source {
+    font-size: 0.8em;
+    color: #666;
+    margin: 8px 0 0 0;
+    padding: 4px 8px;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 6px;
+    border-left: 3px solid #4caf50;
+}
+
+/* 预设内容样式 */
+.memory-item.preset-item {
+    border-left: 4px solid #d4af37;
+}
+
+.memory-item.preset-item:hover {
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.2);
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+    .upload-badge {
+        font-size: 0.7em;
+        padding: 3px 6px;
+    }
+
+    .memory-source {
+        font-size: 0.75em;
+        padding: 3px 6px;
+    }
+}

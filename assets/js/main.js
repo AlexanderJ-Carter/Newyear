@@ -419,16 +419,89 @@ class NewYearCountdown {
      * 处理添加记录功能
      */
     handleAddMemory(type) {
+        // 检查是否在本地服务器环境
+        if (typeof isLocalServer === 'function' && isLocalServer()) {
+            console.log('🚀 本地服务器模式：启用完整功能');
+            this.handleLocalMemoryAdd(type);
+            return;
+        }
+
+        // GitHub静态模式：显示即将上线信息
         const messages = {
-            text: '📝 文字记录功能即将上线！\n您可以在这里记录春节期间的美好时光、感想和愿望。',
-            photo: '📸 图片上传功能即将上线！\n您可以在这里上传春节期间的珍贵照片和美好瞬间。',
-            video: '🎬 视频上传功能即将上线！\n您可以在这里分享春节期间的精彩视频片段。',
+            text: '📝 文字记录功能即将上线！\n您可以在这里记录春节期间的美好时光、感想和愿望。\n\n💡 提示：使用本地服务器模式可立即体验完整功能！',
+            photo: '📸 图片上传功能即将上线！\n您可以在这里上传春节期间的珍贵照片和美好瞬间。\n\n💡 提示：使用本地服务器模式可立即体验完整功能！',
+            video: '🎬 视频上传功能即将上线！\n您可以在这里分享春节期间的精彩视频片段。\n\n💡 提示：使用本地服务器模式可立即体验完整功能！',
         };
 
         alert(messages[type] || '功能即将上线！');
+        console.log(`📤 GitHub静态模式：${type}功能暂不可用`);
+    }
 
-        // 这里可以后续添加实际的上传和记录功能
-        console.log(`添加${type}记录功能被触发`);
+    /**
+     * 本地服务器模式的记忆添加功能
+     */
+    handleLocalMemoryAdd(type) {
+        switch (type) {
+            case 'photo':
+            case 'video':
+                // 跳转到回忆页面进行上传
+                const confirmation = confirm(
+                    `🚀 检测到本地服务器模式！\n\n是否跳转到记忆页面进行${
+                        type === 'photo' ? '图片' : '视频'
+                    }上传？`
+                );
+                if (confirmation) {
+                    window.location.href = 'memories.html';
+                }
+                break;
+
+            case 'text':
+                // 实现文本记录功能
+                this.handleTextMemoryAdd();
+                break;
+
+            default:
+                alert('未知的记录类型');
+        }
+    }
+
+    /**
+     * 处理文本记录添加
+     */
+    handleTextMemoryAdd() {
+        const title = prompt('请输入记忆标题:');
+        if (!title) return;
+
+        const content = prompt('请输入记忆内容:');
+        if (!content) return;
+
+        // 创建文本记忆对象
+        const textMemory = {
+            id: Date.now() + Math.random(),
+            type: 'text',
+            title: title,
+            content: content,
+            date: new Date().toISOString().split('T')[0],
+            timestamp: Date.now(),
+            createdAt: new Date().toISOString(),
+        };
+
+        // 保存到本地存储
+        const existingMemories = JSON.parse(
+            localStorage.getItem('local-text-memories') || '[]'
+        );
+        existingMemories.push(textMemory);
+        localStorage.setItem(
+            'local-text-memories',
+            JSON.stringify(existingMemories)
+        );
+
+        alert('✅ 文字记忆添加成功！\n您可以在记忆页面查看所有记录。');
+
+        // 询问是否跳转到记忆页面
+        if (confirm('是否跳转到记忆页面查看？')) {
+            window.location.href = 'memories.html';
+        }
     }
 
     /**

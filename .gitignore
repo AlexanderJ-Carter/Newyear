@@ -93,6 +93,11 @@ uploads/
 user-content/
 assets/uploads/
 
+# 测试和临时文件
+assets/photos/*-测试*
+assets/videos/*-测试*
+**/test-upload*
+
 # 开发配置
 local-config.js
 server-config.json

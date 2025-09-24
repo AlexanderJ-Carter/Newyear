@@ -15,7 +15,7 @@ class MemoryManager {
         if (typeof LocalFeatures !== 'undefined') {
             this.localFeatures = new LocalFeatures();
         }
-        
+
         await this.loadAllMemories();
         this.bindEvents();
         this.renderMemories();
@@ -29,12 +29,14 @@ class MemoryManager {
             if (this.localFeatures && this.localFeatures.isLocal) {
                 console.log('🚀 使用本地服务器API加载记忆');
                 this.memories = await this.localFeatures.loadMemoriesFromAPI();
-                console.log('📊 从API加载了 ' + this.memories.length + ' 个记忆');
+                console.log(
+                    '📊 从API加载了 ' + this.memories.length + ' 个记忆'
+                );
                 return;
             }
 
             console.log('📤 使用静态文件模式加载记忆');
-            
+
             // 预定义的视频文件列表（存放在 assets/videos/）
             const knownVideoFiles = [
                 'v-20251001-传统年味-展现中华传统春节文化精彩瞬间.mp4',
@@ -183,8 +185,27 @@ class MemoryManager {
     // 从本地存储加载记忆
     loadLocalMemories() {
         try {
+            const memories = [];
+
+            // 加载通用记忆数据
             const stored = localStorage.getItem('springFestivalMemories');
-            return stored ? JSON.parse(stored) : [];
+            if (stored) {
+                memories.push(...JSON.parse(stored));
+            }
+
+            // 加载文本记忆数据（从首页添加的）
+            const textMemories = localStorage.getItem('local-text-memories');
+            if (textMemories) {
+                const parsedTextMemories = JSON.parse(textMemories);
+                memories.push(...parsedTextMemories);
+                console.log(
+                    '📝 从本地存储加载了 ' +
+                        parsedTextMemories.length +
+                        ' 个文字记忆'
+                );
+            }
+
+            return memories;
         } catch (error) {
             console.warn('加载本地记忆失败:', error);
             return [];
@@ -299,8 +320,12 @@ class MemoryManager {
         }
 
         return `
-            <div class="memory-item ${memory.type}-item" data-id="${memory.id}">
-                ${this.localFeatures && this.localFeatures.isLocal ? `
+            <div class="memory-item ${memory.type}-item ${
+            memory.category || 'preset'
+        }-item" data-id="${memory.id}">
+                ${
+                    this.localFeatures && this.localFeatures.isLocal
+                        ? `
                     <div class="memory-actions">
                         <button class="action-btn edit-btn" onclick="memoryManager.editMemory('${memory.id}')" title="编辑记忆">
                             ✏️
@@ -309,7 +334,14 @@ class MemoryManager {
                             🗑️
                         </button>
                     </div>
-                ` : ''}
+                `
+                        : ''
+                }
+                ${
+                    memory.category === 'upload'
+                        ? '<div class="upload-badge">📤 用户上传</div>'
+                        : ''
+                }
                 ${content}
                 <div class="memory-info">
                     <h3 class="memory-title">${memory.title || '无标题'}</h3>
@@ -317,6 +349,11 @@ class MemoryManager {
                     ${
                         memory.description
                             ? `<p class="memory-desc">${memory.description}</p>`
+                            : ''
+                    }
+                    ${
+                        memory.category === 'upload'
+                            ? '<p class="memory-source">📁 存储位置: uploads/</p>'
                             : ''
                     }
                 </div>
@@ -373,7 +410,7 @@ class MemoryManager {
             return;
         }
 
-        const memory = this.memories.find(m => m.id == memoryId);
+        const memory = this.memories.find((m) => m.id == memoryId);
         if (!memory) {
             alert('找不到该记忆');
             return;
@@ -385,7 +422,11 @@ class MemoryManager {
         const newDescription = prompt('编辑描述:', memory.description || '');
         if (newDescription === null) return; // 用户取消
 
-        const success = await this.localFeatures.updateMemory(memoryId, newTitle, newDescription);
+        const success = await this.localFeatures.updateMemory(
+            memoryId,
+            newTitle,
+            newDescription
+        );
         if (success) {
             alert('更新成功！');
             await this.loadAllMemories();

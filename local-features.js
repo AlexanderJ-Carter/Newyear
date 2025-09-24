@@ -4,10 +4,24 @@
 
 // 检测是否在本地服务器环境
 const isLocalServer = () => {
-    return window.location.protocol === 'http:' && 
-           (window.location.hostname === 'localhost' || 
-            window.location.hostname === '127.0.0.1' ||
-            window.location.hostname.includes('192.168.'));
+    const hostname = window.location.hostname;
+    const protocol = window.location.protocol;
+
+    // 必须是HTTP协议（HTTPS通常是远程部署）
+    if (protocol !== 'http:') return false;
+
+    // 本地地址
+    if (hostname === 'localhost' || hostname === '127.0.0.1') return true;
+
+    // 指定的IP地址范围
+    const allowedIPRanges = [
+        /^192\.168\./, // 192.168.0.0/16 (标准家庭网络)
+        /^10\.199\.166\./, // 10.199.166.0/24 (您指定的网段)
+        /^183\.172\.39\./, // 183.172.39.0/24 (您指定的网段)
+    ];
+
+    // 检查是否匹配任何允许的IP范围
+    return allowedIPRanges.some((range) => range.test(hostname));
 };
 
 // 本地服务器API配置
@@ -17,8 +31,8 @@ const LOCAL_API = {
         MEMORIES: '/api/memories',
         UPLOAD: '/api/upload',
         UPDATE: '/api/memories',
-        DELETE: '/api/memories'
-    }
+        DELETE: '/api/memories',
+    },
 };
 
 // 本地功能增强类
@@ -64,6 +78,9 @@ class LocalFeatures {
                         </div>
                         <button id="uploadButton" class="upload-btn" disabled>
                             <span>上传记忆</span>
+                        </button>
+                        <button id="cleanupButton" class="cleanup-btn" style="margin-top: 10px;">
+                            <span>🧹 清理无效记录</span>
                         </button>
                     </div>
                 </div>
@@ -139,10 +156,9 @@ class LocalFeatures {
                 font-size: 0.9em;
                 opacity: 0.8;
             }
-            .upload-btn {
+            .upload-btn, .cleanup-btn {
                 width: 100%;
                 padding: 15px;
-                background: linear-gradient(135deg, #d4af37, #f39c12);
                 border: none;
                 border-radius: 8px;
                 color: white;
@@ -150,9 +166,18 @@ class LocalFeatures {
                 cursor: pointer;
                 transition: all 0.3s ease;
             }
-            .upload-btn:hover:not(:disabled) {
+            .upload-btn {
+                background: linear-gradient(135deg, #d4af37, #f39c12);
+            }
+            .cleanup-btn {
+                background: linear-gradient(135deg, #e74c3c, #c0392b);
+            }
+            .upload-btn:hover:not(:disabled), .cleanup-btn:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+            }
+            .cleanup-btn:hover {
+                box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
             }
             .upload-btn:disabled {
                 opacity: 0.5;
@@ -259,13 +284,23 @@ class LocalFeatures {
             uploadButton.addEventListener('click', () => this.uploadFile());
         }
 
+        // 清理按钮
+        const cleanupButton = document.getElementById('cleanupButton');
+        if (cleanupButton) {
+            cleanupButton.addEventListener('click', () =>
+                this.cleanupInvalidRecords()
+            );
+        }
+
         // 输入框变化监听
         const titleInput = document.getElementById('uploadTitle');
         const descInput = document.getElementById('uploadDescription');
-        
-        [titleInput, descInput, fileInput].forEach(input => {
+
+        [titleInput, descInput, fileInput].forEach((input) => {
             if (input) {
-                input.addEventListener('change', () => this.updateUploadButton());
+                input.addEventListener('change', () =>
+                    this.updateUploadButton()
+                );
             }
         });
     }
@@ -274,13 +309,17 @@ class LocalFeatures {
     handleFileSelect(file) {
         const uploadArea = document.getElementById('fileUploadArea');
         const uploadButton = document.getElementById('uploadButton');
-        
+
         if (uploadArea) {
             uploadArea.innerHTML = `
                 <div class="file-selected">
-                    <span class="file-icon">${file.type.startsWith('video/') ? '🎬' : '📸'}</span>
+                    <span class="file-icon">${
+                        file.type.startsWith('video/') ? '🎬' : '📸'
+                    }</span>
                     <p><strong>${file.name}</strong></p>
-                    <p class="file-size">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                    <p class="file-size">${(file.size / 1024 / 1024).toFixed(
+                        2
+                    )} MB</p>
                     <button type="button" onclick="this.parentElement.parentElement.click()">重新选择</button>
                 </div>
             `;
@@ -304,8 +343,9 @@ class LocalFeatures {
     // 上传文件
     async uploadFile() {
         const title = document.getElementById('uploadTitle')?.value?.trim();
-        const description = document.getElementById('uploadDescription')?.value?.trim() || '';
-        
+        const description =
+            document.getElementById('uploadDescription')?.value?.trim() || '';
+
         if (!this.selectedFile || !title) {
             alert('请填写标题并选择文件！');
             return;
@@ -325,7 +365,7 @@ class LocalFeatures {
 
             const response = await fetch(LOCAL_API.ENDPOINTS.UPLOAD, {
                 method: 'POST',
-                body: formData
+                body: formData,
             });
 
             const result = await response.json();
@@ -358,7 +398,7 @@ class LocalFeatures {
         document.getElementById('uploadDescription').value = '';
         document.getElementById('fileInput').value = '';
         this.selectedFile = null;
-        
+
         const uploadArea = document.getElementById('fileUploadArea');
         if (uploadArea) {
             uploadArea.innerHTML = `
@@ -369,7 +409,7 @@ class LocalFeatures {
                 </div>
             `;
         }
-        
+
         this.updateUploadButton();
     }
 
@@ -378,8 +418,8 @@ class LocalFeatures {
         const options = {
             method,
             headers: {
-                'Content-Type': 'application/json'
-            }
+                'Content-Type': 'application/json',
+            },
         };
 
         if (data && method !== 'GET') {
@@ -393,7 +433,7 @@ class LocalFeatures {
     // 加载记忆数据 (本地API版本)
     async loadMemoriesFromAPI() {
         if (!this.isLocal) return [];
-        
+
         try {
             const response = await fetch(LOCAL_API.ENDPOINTS.MEMORIES);
             const memories = await response.json();
@@ -407,14 +447,17 @@ class LocalFeatures {
     // 更新记忆
     async updateMemory(id, title, description) {
         if (!this.isLocal) return false;
-        
+
         try {
-            const response = await fetch(`${LOCAL_API.ENDPOINTS.UPDATE}/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, description })
-            });
-            
+            const response = await fetch(
+                `${LOCAL_API.ENDPOINTS.UPDATE}/${id}`,
+                {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, description }),
+                }
+            );
+
             const result = await response.json();
             return result.success;
         } catch (error) {
@@ -426,16 +469,19 @@ class LocalFeatures {
     // 删除记忆
     async deleteMemory(id) {
         if (!this.isLocal) return false;
-        
+
         if (!confirm('确定要删除这个记忆吗？此操作不可撤销！')) {
             return false;
         }
-        
+
         try {
-            const response = await fetch(`${LOCAL_API.ENDPOINTS.DELETE}/${id}`, {
-                method: 'DELETE'
-            });
-            
+            const response = await fetch(
+                `${LOCAL_API.ENDPOINTS.DELETE}/${id}`,
+                {
+                    method: 'DELETE',
+                }
+            );
+
             const result = await response.json();
             return result.success;
         } catch (error) {
