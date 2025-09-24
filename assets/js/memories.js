@@ -6,10 +6,16 @@ class MemoryManager {
     constructor() {
         this.sortOrder = 'newest'; // 'newest' or 'oldest'
         this.memories = [];
+        this.localFeatures = null;
         this.init();
     }
 
     async init() {
+        // 初始化本地功能（如果可用）
+        if (typeof LocalFeatures !== 'undefined') {
+            this.localFeatures = new LocalFeatures();
+        }
+        
         await this.loadAllMemories();
         this.bindEvents();
         this.renderMemories();
@@ -19,6 +25,16 @@ class MemoryManager {
     // 加载所有记忆（视频和图片）
     async loadAllMemories() {
         try {
+            // 检查是否在本地服务器环境
+            if (this.localFeatures && this.localFeatures.isLocal) {
+                console.log('🚀 使用本地服务器API加载记忆');
+                this.memories = await this.localFeatures.loadMemoriesFromAPI();
+                console.log('📊 从API加载了 ' + this.memories.length + ' 个记忆');
+                return;
+            }
+
+            console.log('📤 使用静态文件模式加载记忆');
+            
             // 预定义的视频文件列表（存放在 assets/videos/）
             const knownVideoFiles = [
                 'v-20251001-传统年味-展现中华传统春节文化精彩瞬间.mp4',
@@ -284,6 +300,16 @@ class MemoryManager {
 
         return `
             <div class="memory-item ${memory.type}-item" data-id="${memory.id}">
+                ${this.localFeatures && this.localFeatures.isLocal ? `
+                    <div class="memory-actions">
+                        <button class="action-btn edit-btn" onclick="memoryManager.editMemory('${memory.id}')" title="编辑记忆">
+                            ✏️
+                        </button>
+                        <button class="action-btn delete-btn" onclick="memoryManager.deleteMemory('${memory.id}')" title="删除记忆">
+                            🗑️
+                        </button>
+                    </div>
+                ` : ''}
                 ${content}
                 <div class="memory-info">
                     <h3 class="memory-title">${memory.title || '无标题'}</h3>
@@ -339,11 +365,57 @@ class MemoryManager {
     closeModals() {
         // 预留方法
     }
+
+    // 编辑记忆
+    async editMemory(memoryId) {
+        if (!this.localFeatures || !this.localFeatures.isLocal) {
+            alert('编辑功能仅在本地服务器模式下可用');
+            return;
+        }
+
+        const memory = this.memories.find(m => m.id == memoryId);
+        if (!memory) {
+            alert('找不到该记忆');
+            return;
+        }
+
+        const newTitle = prompt('编辑标题:', memory.title);
+        if (newTitle === null) return; // 用户取消
+
+        const newDescription = prompt('编辑描述:', memory.description || '');
+        if (newDescription === null) return; // 用户取消
+
+        const success = await this.localFeatures.updateMemory(memoryId, newTitle, newDescription);
+        if (success) {
+            alert('更新成功！');
+            await this.loadAllMemories();
+            this.renderMemories();
+        } else {
+            alert('更新失败，请重试');
+        }
+    }
+
+    // 删除记忆
+    async deleteMemory(memoryId) {
+        if (!this.localFeatures || !this.localFeatures.isLocal) {
+            alert('删除功能仅在本地服务器模式下可用');
+            return;
+        }
+
+        const success = await this.localFeatures.deleteMemory(memoryId);
+        if (success) {
+            alert('删除成功！');
+            await this.loadAllMemories();
+            this.renderMemories();
+        } else {
+            alert('删除失败，请重试');
+        }
+    }
 }
 
 // 初始化应用
 document.addEventListener('DOMContentLoaded', () => {
-    new MemoryManager();
+    window.memoryManager = new MemoryManager();
 
     // 添加页面加载完成的视觉效果
     setTimeout(() => {

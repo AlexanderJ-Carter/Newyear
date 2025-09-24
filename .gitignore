@@ -49,6 +49,7 @@ PROJECT_README.md
 CONFIG.md
 DEPLOY.md
 FILE_ORGANIZATION.md
+LOCAL_SERVER_GUIDE.md
 docs/
 documentation/
 说明*.md
@@ -57,3 +58,42 @@ README_*.md
 
 # 保留 README.md（项目主文档）
 !README.md
+
+# ====== 本地服务器功能文件 (不上传到GitHub) ======
+# Node.js 相关
+server.js
+server/
+api/
+node_modules/
+package.json
+package-lock.json
+
+# 本地脚本和配置
+*.bat
+*.sh
+start-local-server.*
+local-config.js
+server-config.json
+.local
+
+# 数据库文件
+*.sqlite
+*.db
+database/
+data/
+
+# 本地功能相关
+local-features/
+admin/
+upload/
+backend/
+
+# 用户上传的文件（大文件）
+uploads/
+user-content/
+assets/uploads/
+
+# 开发配置
+local-config.js
+server-config.json
+.local
