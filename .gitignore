@@ -43,3 +43,11 @@ dist/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# 文档文件 (仅保存在本地)
+PROJECT_README.md
+docs/
+documentation/
+说明*.md
+README_*.md
+*.txt
