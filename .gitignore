@@ -4,5 +4,5 @@ dist
 *.local
 .env
 _legacy_backup
-uploads
-server-data/memories.json
+# uploads (注释掉：允许提交照片到 GitHub)
+# server-data/memories.json (注释掉：允许提交数据到 GitHub)
