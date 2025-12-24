@@ -4,31 +4,90 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3001; // 后端运行端口
+const httpServer = createServer(app); // 创建 HTTP 服务器
+// 配置 Socket.io，允许跨域
+const io = new Server(httpServer, {
+    cors: {
+        origin: "*", 
+        methods: ["GET", "POST"]
+    }
+});
+
+const PORT = 3001;
 
 // 中间件
 app.use(cors());
 app.use(express.json());
 
+// --- Socket.io 直播信令逻辑 ---
+let broadcaster; // 记录当前主播的 Socket ID
+
+io.on("connection", (socket) => {
+    // --- 在线人数更新 ---
+    io.emit('update-viewers', io.engine.clientsCount);
+
+    socket.on("disconnect", () => {
+        io.emit('update-viewers', io.engine.clientsCount);
+        // 原有的 WebRTC 断开逻辑
+        socket.to(broadcaster).emit("disconnectPeer", socket.id);
+    });
+
+    // --- 聊天弹幕 ---
+    socket.on("send-message", (message) => {
+        // 将收到的消息广播给所有人（包括发送者自己）
+        io.emit("new-message", message);
+    });
+
+    // --- 直播信令逻辑 ---
+    // 1. 主播上线
+    socket.on("broadcaster", () => {
+        broadcaster = socket.id;
+        socket.broadcast.emit("broadcaster"); // 告诉所有观众：主播来了
+    });
+
+    // 2. 观众上线
+    socket.on("watcher", () => {
+        if (broadcaster) {
+            socket.to(broadcaster).emit("watcher", socket.id); // 告诉主播：有个观众(id)想看
+        }
+    });
+
+    // ... (省略其他 WebRTC 信令事件) ...
+    // 3. WebRTC 握手：Offer (主播 -> 观众)
+    socket.on("offer", (id, message) => {
+        socket.to(id).emit("offer", socket.id, message);
+    });
+
+    // 4. WebRTC 握手：Answer (观众 -> 主播)
+    socket.on("answer", (id, message) => {
+        socket.to(id).emit("answer", socket.id, message);
+    });
+
+    // 5. 网络候选路径交换 (Candidate)
+    socket.on("candidate", (id, message) => {
+        socket.to(id).emit("candidate", socket.id, message);
+    });
+});
+// ----------------------------
+
 // 静态资源服务
-// 1. 服务上传的文件
 if (!fs.existsSync('uploads')) {
     fs.mkdirSync('uploads');
 }
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// 配置 Multer 存储
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/')
   },
   filename: function (req, file, cb) {
-    // 生成文件名: type-timestamp-random.ext
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     const ext = path.extname(file.originalname);
     cb(null, file.fieldname + '-' + uniqueSuffix + ext)
@@ -36,126 +95,72 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
-// 数据文件路径
 const DATA_FILE = path.join(__dirname, 'server-data', 'memories.json');
 
-// --- API 接口 ---
-
-// 1. 获取所有记忆
+// API 接口
 app.get('/api/memories', (req, res) => {
     fs.readFile(DATA_FILE, 'utf8', (err, data) => {
         if (err) {
-            // 如果文件不存在，初始化为空数组
-            if (err.code === 'ENOENT') {
-                return res.json([]);
-            }
+            if (err.code === 'ENOENT') return res.json([]);
             return res.status(500).json({ error: '无法读取数据' });
         }
-        try {
-            res.json(JSON.parse(data));
-        } catch (e) {
-            res.json([]);
-        }
+        try { res.json(JSON.parse(data)); } catch (e) { res.json([]); }
     });
 });
 
-// 2. 上传文件并保存记忆
 app.post('/api/upload', upload.single('file'), (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({ error: '没有上传文件' });
-    }
-
+    if (!req.file) return res.status(400).json({ error: '没有上传文件' });
     const { title, description, date, type } = req.body;
-    
-    // 构建新的记忆对象
     const newMemory = {
-        id: req.file.filename.split('.')[0], // 使用文件名作为ID
+        id: req.file.filename.split('.')[0],
         type: type || (req.file.mimetype.startsWith('video') ? 'video' : 'photo'),
         title: title || '未命名',
         description: description || '',
-        url: `uploads/${req.file.filename}`, // 相对路径
+        url: `uploads/${req.file.filename}`,
         date: date || new Date().toISOString().split('T')[0],
         timestamp: Date.now()
     };
-
-    // 读取现有数据并更新
     fs.readFile(DATA_FILE, 'utf8', (err, data) => {
         let memories = [];
-        if (!err && data) {
-            try {
-                memories = JSON.parse(data);
-            } catch (e) {}
-        }
-
-        memories.unshift(newMemory); // 加到最前面
-
-        // 写入文件
+        if (!err && data) { try { memories = JSON.parse(data); } catch (e) {} }
+        memories.unshift(newMemory);
         fs.writeFile(DATA_FILE, JSON.stringify(memories, null, 2), (err) => {
-            if (err) {
-                return res.status(500).json({ error: '保存数据失败' });
-            }
+            if (err) return res.status(500).json({ error: '保存数据失败' });
             res.json({ success: true, memory: newMemory });
         });
     });
 });
 
-// 3. 删除记忆
 app.delete('/api/memories/:id', (req, res) => {
     const id = req.params.id;
-
     fs.readFile(DATA_FILE, 'utf8', (err, data) => {
         if (err) return res.status(500).json({ error: '读取数据失败' });
-
         let memories = [];
-        try {
-            memories = JSON.parse(data);
-        } catch (e) {}
-
+        try { memories = JSON.parse(data); } catch (e) {}
         const memoryIndex = memories.findIndex(m => m.id === id);
-        if (memoryIndex === -1) {
-            return res.status(404).json({ error: '找不到该记忆' });
-        }
-
+        if (memoryIndex === -1) return res.status(404).json({ error: '找不到该记忆' });
         const memory = memories[memoryIndex];
-        
-        // 尝试删除物理文件 (即使文件不存在也继续删除记录)
         const filePath = path.join(__dirname, memory.url);
         fs.unlink(filePath, (unlinkErr) => {
-            if (unlinkErr && unlinkErr.code !== 'ENOENT') {
-                console.error('删除文件失败:', unlinkErr);
-                // 这里可以选择是否中断，通常为了数据一致性，我们允许继续删除记录
-            }
-
-            // 从数组中移除
             memories.splice(memoryIndex, 1);
-
-            // 保存更新后的 JSON
             fs.writeFile(DATA_FILE, JSON.stringify(memories, null, 2), (writeErr) => {
-                if (writeErr) {
-                    return res.status(500).json({ error: '更新数据库失败' });
-                }
+                if (writeErr) return res.status(500).json({ error: '更新数据库失败' });
                 res.json({ success: true });
             });
         });
     });
 });
 
-// 4. 生产环境：托管 React 构建文件
-// 当我们运行 npm run build 后，dist 目录会被生成
 app.use(express.static(path.join(__dirname, 'dist')));
-
-// 任何不匹配 API 的请求都返回 React 的 index.html (支持前端路由)
-// 使用正则 /.*/ 替代 '*' 以避免 path-to-regexp 版本冲突报错
+// 路由必须使用正则匹配
 app.get(/.*/, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
-app.listen(PORT, () => {
+// 使用 httpServer.listen 而不是 app.listen
+httpServer.listen(PORT, () => {
     console.log(`=========================================`);
-    console.log(`🏮 春节记忆馆服务器已启动!`);
-    console.log(`📡 本地访问: http://localhost:${PORT}`);
-    console.log(`🌍 局域网访问: http://[您的IP]:${PORT}`);
-    console.log(`📂 文件存储在: ${path.join(__dirname, 'uploads')}`);
+    console.log(`🏮 春节记忆馆 (含直播) 服务器已启动!`);
+    console.log(`📡 本地/局域网访问端口: ${PORT}`);
     console.log(`=========================================`);
 });

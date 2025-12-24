@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Memories from './pages/Memories'
 import Knowledge from './pages/Knowledge'
+import Live from './pages/Live'
 import { useEffect, useState } from 'react'
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/memories" element={<Memories />} />
           <Route path="/knowledge" element={<Knowledge />} />
+          <Route path="/live" element={<Live />} />
         </Routes>
       </AnimatePresence>
     </>

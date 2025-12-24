@@ -20,8 +20,8 @@ export default function Navbar() {
           <span>春节记忆馆</span>
         </NavLink>
         <div style={{ display: 'flex', gap: '30px' }}>
-          {['首页', '文化殿堂', '时光宝盒'].map((text, index) => {
-             const path = index === 0 ? '/' : index === 1 ? '/knowledge' : '/memories'
+          {['首页', '文化殿堂', '时光宝盒', '云直播'].map((text, index) => {
+             const path = index === 0 ? '/' : index === 1 ? '/knowledge' : index === 2 ? '/memories' : '/live'
              return (
                <NavLink to={path} key={path} style={linkStyle}>
                  {({ isActive }) => (

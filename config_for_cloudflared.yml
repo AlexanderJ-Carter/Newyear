@@ -1,0 +1,10 @@
+tunnel: d78e6020-6c71-4b8c-81ab-4144f8563e72
+credentials-file: C:\Users\22539\.cloudflared\d78e6020-6c71-4b8c-81ab-4144f8563e72.json
+
+ingress:
+  # 新增的春节直播服务
+  - hostname: newyear-live.alexander.xin
+    service: http://localhost:3001
+    
+  # 捕获所有其他流量，防止服务中断
+  - service: http_status:404
