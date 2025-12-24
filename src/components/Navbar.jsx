@@ -16,7 +16,7 @@ export default function Navbar() {
     }}>
       <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '100%' }}>
         <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.4rem', fontFamily: 'Noto Serif SC', fontWeight: 700, color: '#C02C38' }}>
-          <img src="assets/images/newyear-icon.svg" alt="Logo" style={{ height: '32px' }} />
+          <img src={`${import.meta.env.BASE_URL}assets/images/newyear-icon.svg`} alt="Logo" style={{ height: '32px' }} />
           <span>春节记忆馆</span>
         </NavLink>
         <div style={{ display: 'flex', gap: '30px' }}>
