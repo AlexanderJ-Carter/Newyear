@@ -1,0 +1,61 @@
+/* src/styles/index.css */
+:root {
+  /* --- 核心色板 (Color Palette) --- */
+  --color-red-primary: #C02C38;
+  --color-red-light: #E84A5F;
+  --color-red-dark: #8E1E26;
+  
+  --color-gold-primary: #D4AF37;
+  --color-gold-light: #F3E5AB;
+  --color-gold-dark: #B49120;
+
+  --color-ink: #2B2B2B;
+  --color-text-main: #4A4A4A;
+  --color-text-sub: #888888;
+
+  --color-bg-body: #FDFBF7;
+  --color-bg-card: #FFFFFF;
+
+  /* --- 字体 --- */
+  --font-serif: 'Noto Serif SC', 'Songti SC', serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  --spacing-container: 1200px;
+  --header-height: 70px;
+  
+  --shadow-sm: 0 4px 6px rgba(192, 44, 56, 0.05);
+  --shadow-card: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-body);
+  color: var(--color-text-main);
+  line-height: 1.6;
+  overflow-x: hidden;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+h1, h2, h3, h4 { font-family: var(--font-serif); color: var(--color-ink); }
+a { text-decoration: none; color: inherit; transition: 0.3s; }
+button { border: none; cursor: pointer; font-family: inherit; outline: none; }
+ul { list-style: none; }
+
+.container {
+  max-width: var(--spacing-container);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 全局布局辅助 */
+.page-container {
+  padding-top: var(--header-height);
+  min-height: 100vh;
+}
