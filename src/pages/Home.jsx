@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import lantern from '/assets/images/newyear-icon.svg' // 复用图标作为灯笼占位
 
 function Countdown() {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
@@ -54,11 +53,11 @@ export default function Home() {
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', position: 'relative' }}
     >
       {/* 灯笼装饰 */}
-      <motion.img src={lantern} alt="lantern" 
+      <motion.img src="assets/images/newyear-icon.svg" alt="lantern" 
         style={{ position: 'absolute', top: '80px', left: '10%', width: '100px', zIndex: 1 }}
         animate={{ rotate: [-5, 5, -5] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
       />
-      <motion.img src={lantern} alt="lantern" 
+      <motion.img src="assets/images/newyear-icon.svg" alt="lantern" 
         style={{ position: 'absolute', top: '80px', right: '10%', width: '100px', zIndex: 1 }}
         animate={{ rotate: [5, -5, 5] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
       />
