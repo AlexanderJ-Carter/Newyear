@@ -1,0 +1,38 @@
+[
+  {
+    "id": "video_1",
+    "type": "video",
+    "title": "传统年味",
+    "description": "展现中华传统春节文化精彩瞬间，舞龙舞狮，热闹非凡。",
+    "url": "assets/videos/v-20251001-传统年味-展现中华传统春节文化精彩瞬间.mp4",
+    "date": "2025-10-01",
+    "timestamp": 1759276800000
+  },
+  {
+    "id": "video_2",
+    "type": "video",
+    "title": "春节宣传片",
+    "description": "感受传统节日的魅力与温暖，阖家团圆，共度佳节。",
+    "url": "assets/videos/v-20251001-春节宣传片-展现传统节日的魅力与温暖.mp4",
+    "date": "2025-10-01",
+    "timestamp": 1759276800000
+  },
+  {
+    "id": "video_3",
+    "type": "video",
+    "title": "春节序曲",
+    "description": "优美的春节音乐营造浓浓年味，经典旋律，回味无穷。",
+    "url": "assets/videos/v-20260101-春节序曲-优美的春节音乐营造浓浓年味.mp4",
+    "date": "2026-01-01",
+    "timestamp": 1767225600000
+  },
+  {
+    "id": "photo_1",
+    "type": "photo",
+    "title": "除夕年夜饭",
+    "description": "一家人围坐在一起，享用丰盛的年夜饭，举杯共庆。",
+    "url": "assets/images/newyear-icon.svg",
+    "date": "2026-02-16",
+    "timestamp": 1771113600000
+  }
+]

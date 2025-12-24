@@ -1,0 +1,720 @@
+/* ==========================================================================
+   春节记忆页面样式 - 全新设计
+   ========================================================================== */
+
+/* 全局设置 */
+.memories-page {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', 'Noto Serif SC', sans-serif;
+    background: #fff; /* 改为白色背景 */
+    color: #333; /* 改为深色文字 */
+    overflow-x: hidden;
+}
+
+/* 动态背景 */
+.memories-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.gradient-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg,
+        #ffecd2 0%,
+        #fcb69f 25%,
+        #ff9a9e 50%,
+        #fecfef 75%,
+        #ffd1dc 100%
+    );
+    animation: gradientShift 20s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* 粒子效果 */
+.particles-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: rgba(255, 107, 107, 0.7); /* 温暖的红色 */
+    border-radius: 50%;
+    animation: float 15s infinite linear;
+    box-shadow: 0 0 8px rgba(255, 107, 107, 0.3);
+}
+
+.particle:nth-child(1) {
+    left: 20%;
+    animation-delay: 0s;
+    background: rgba(255, 107, 107, 0.7); /* 红色粒子 */
+    box-shadow: 0 0 8px rgba(255, 107, 107, 0.3);
+}
+.particle:nth-child(2) {
+    left: 40%;
+    animation-delay: 3s;
+    background: rgba(255, 99, 132, 0.7); /* 粉红色粒子 */
+    box-shadow: 0 0 8px rgba(255, 99, 132, 0.3);
+}
+.particle:nth-child(3) {
+    left: 60%;
+    animation-delay: 6s;
+    background: rgba(255, 159, 243, 0.7); /* 紫粉色粒子 */
+    box-shadow: 0 0 8px rgba(255, 159, 243, 0.3);
+}
+.particle:nth-child(4) {
+    left: 80%;
+    animation-delay: 9s;
+    background: rgba(252, 182, 159, 0.7); /* 橙色粒子 */
+    box-shadow: 0 0 8px rgba(252, 182, 159, 0.3);
+}
+.particle:nth-child(5) {
+    left: 90%;
+    animation-delay: 12s;
+    background: rgba(255, 154, 158, 0.7); /* 粉色粒子 */
+    box-shadow: 0 0 8px rgba(255, 154, 158, 0.3);
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* 主容器 */
+.memories-wrapper {
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+/* 头部区域 */
+.memories-header {
+    padding: 60px 20px 40px;
+    text-align: center;
+    position: relative;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.title-section {
+    flex: 1;
+    text-align: left;
+}
+
+.main-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(135deg, #ffd700, #ff6347, #dc143c, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    animation: titleGlow 3s ease-in-out infinite;
+}
+
+.title-icon {
+    font-size: 4rem;
+    filter: drop-shadow(0 0 20px #ffd700);
+    animation: iconSpin 10s linear infinite;
+}
+
+@keyframes titleGlow {
+    0%,
+    100% {
+        filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+    }
+    50% {
+        filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8));
+    }
+}
+
+@keyframes iconSpin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+.header-controls {
+    display: flex;
+    gap: 15px;
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: rgba(220, 20, 60, 0.2); /* 红色背景 */
+    border: 2px solid rgba(255, 215, 0, 0.7); /* 金色边框 */
+    border-radius: 50px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.back-btn:hover {
+    background: rgba(255, 215, 0, 0.3); /* 悬停时金色背景 */
+    border-color: #ffd700;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);
+}
+
+/* 主内容区域 */
+.memories-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* 排序控制 */
+.sort-section {
+    margin-bottom: 40px;
+}
+
+.sort-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px 30px;
+    background: rgba(220, 20, 60, 0.15); /* 红色背景 */
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 2px solid rgba(255, 215, 0, 0.4); /* 金色边框 */
+    box-shadow: 0 8px 32px rgba(220, 20, 60, 0.3); /* 红色阴影 */
+}
+
+.sort-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #ffd700; /* 金色文字 */
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); /* 金色发光 */
+}
+
+.sort-icon {
+    font-size: 1.3rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.sort-selector {
+    padding: 12px 20px;
+    background: rgba(139, 0, 0, 0.7); /* 深红色背景 */
+    border: 2px solid rgba(255, 215, 0, 0.6); /* 金色边框 */
+    border-radius: 15px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    min-width: 180px;
+    outline: none;
+}
+
+.sort-selector:hover {
+    border-color: #ffd700; /* 悬停时更亮的金色边框 */
+    background: rgba(220, 20, 60, 0.8); /* 悬停时较亮的红色背景 */
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.sort-selector:focus {
+    border-color: #ffd700;
+    box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.3);
+}
+
+.sort-selector option {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 10px;
+}
+
+/* 记忆展示区 */
+.memories-showcase {
+    min-height: 400px;
+}
+
+.memories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    padding: 20px 0;
+}
+
+/* 空状态 */
+.empty-memories {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 30px;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.empty-memories::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 215, 0, 0.1),
+        transparent
+    );
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+.empty-visual {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    filter: grayscale(50%);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+.empty-sparkles {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.empty-sparkles span {
+    font-size: 1.5rem;
+    animation: twinkle 1.5s infinite;
+}
+
+.empty-sparkles span:nth-child(1) {
+    animation-delay: 0s;
+}
+.empty-sparkles span:nth-child(2) {
+    animation-delay: 0.5s;
+}
+.empty-sparkles span:nth-child(3) {
+    animation-delay: 1s;
+}
+
+@keyframes twinkle {
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+.empty-title {
+    font-size: 2rem;
+    margin: 0 0 15px 0;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+}
+
+.empty-desc {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0;
+    font-weight: 300;
+}
+
+/* 记忆项样式 */
+.memory-item {
+    background: rgba(220, 20, 60, 0.1); /* 淡红色背景 */
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid rgba(255, 215, 0, 0.3); /* 金色边框 */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.memory-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(220, 20, 60, 0.3); /* 红色阴影 */
+    border-color: rgba(255, 215, 0, 0.7); /* 悬停时更亮的金色边框 */
+    background: rgba(255, 215, 0, 0.1); /* 悬停时金色背景 */
+}
+
+/* 照片项样式 */
+.memory-item.photo-item .photo-container {
+    width: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.memory-item.photo-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.memory-item.photo-item:hover img {
+    transform: scale(1.05);
+}
+
+/* 视频项样式 */
+.memory-item.video-item .video-container {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    background: #000;
+}
+
+.memory-item.video-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+}
+
+/* 文字项样式 */
+.memory-item.text-item .text-content {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    margin-bottom: 15px;
+    border-left: 4px solid #ffd700;
+}
+
+.memory-item.text-item .text-content p {
+    margin: 0;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    font-style: italic;
+}
+
+/* 记忆信息 */
+.memory-info {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.memory-title {
+    font-size: 1.2rem;
+    margin: 0 0 8px 0;
+    color: #ffd700;
+    font-weight: 600;
+}
+
+.memory-date {
+    font-size: 0.9rem;
+    margin: 0 0 10px 0;
+    color: #cc5500; /* 深橙色，与春节主题相配 */
+    font-weight: 400;
+}
+
+.memory-desc {
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.5;
+    color: #666; /* 深灰色，适合白底背景阅读 */
+}
+
+/* 底部导航 */
+.memories-footer {
+    margin-top: 60px;
+    padding: 40px 20px 30px;
+    background: rgba(139, 0, 0, 0.3); /* 深红色背景 */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-top: 2px solid rgba(255, 215, 0, 0.3); /* 金色上边框 */
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 15px 25px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid transparent;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    color: #ffd700; /* 金色文字 */
+    background: rgba(220, 20, 60, 0.2); /* 红色背景 */
+    border-color: rgba(255, 215, 0, 0.5); /* 金色边框 */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3); /* 金色阴影 */
+}
+
+.nav-icon {
+    font-size: 1.5rem;
+}
+
+.nav-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.footer-text {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    font-weight: 300;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .main-title {
+        font-size: 2.5rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .title-icon {
+        font-size: 3rem;
+    }
+
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .title-section {
+        text-align: center;
+    }
+
+    .sort-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .memories-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .footer-nav {
+        gap: 20px;
+    }
+
+    .nav-item {
+        padding: 12px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .memories-header {
+        padding: 40px 15px 30px;
+    }
+
+    .memories-main {
+        padding: 0 15px;
+    }
+
+    .main-title {
+        font-size: 2rem;
+    }
+
+    .sort-selector {
+        min-width: 150px;
+    }
+
+    .footer-nav {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .nav-item {
+        width: 200px;
+        justify-content: center;
+    }
+}
+
+/* ==========================================================================
+   用户上传内容样式
+   ========================================================================== */
+
+/* 上传标识徽章 */
+.upload-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: linear-gradient(135deg, #4caf50, #45a049);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: 500;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+/* 用户上传的记忆项样式区分 */
+.memory-item.upload-item {
+    border-left: 4px solid #4caf50;
+    box-shadow: 0 4px 20px rgba(76, 175, 80, 0.1);
+}
+
+.memory-item.upload-item:hover {
+    box-shadow: 0 8px 30px rgba(76, 175, 80, 0.2);
+    transform: translateY(-2px);
+}
+
+/* 存储位置信息 */
+.memory-source {
+    font-size: 0.8em;
+    color: #666;
+    margin: 8px 0 0 0;
+    padding: 4px 8px;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 6px;
+    border-left: 3px solid #4caf50;
+}
+
+/* 预设内容样式 */
+.memory-item.preset-item {
+    border-left: 4px solid #d4af37;
+}
+
+.memory-item.preset-item:hover {
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.2);
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+    .upload-badge {
+        font-size: 0.7em;
+        padding: 3px 6px;
+    }
+
+    .memory-source {
+        font-size: 0.75em;
+        padding: 3px 6px;
+    }
+}
