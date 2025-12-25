@@ -1,0 +1,3 @@
+@echo off
+echo Starting build process...
+npm run publish:static

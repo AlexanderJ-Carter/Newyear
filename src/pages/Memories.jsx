@@ -56,6 +56,13 @@ export default function Memories() {
     ? memories 
     : memories.filter(item => item.type === filter)
 
+  // 辅助函数：处理资源路径
+  const resolveUrl = (url) => {
+    if (!url) return ''
+    if (url.startsWith('http') || url.startsWith('/')) return url
+    return `${import.meta.env.BASE_URL}${url}`
+  }
+
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="page-container container">
       <header style={{ textAlign: 'center', padding: '60px 0 40px', position: 'relative' }}>
@@ -133,11 +140,11 @@ export default function Memories() {
                 <div style={{ width: '100%', aspectRatio: '16/9', background: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
                   {item.type === 'video' ? (
                      <>
-                       <video src={item.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted />
+                       <video src={resolveUrl(item.url)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted />
                        <div style={{ position: 'absolute', width: '50px', height: '50px', background: 'rgba(0,0,0,0.6)', borderRadius: '50%', color: '#fff', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '1.5rem' }}>▶</div>
                      </>
                   ) : (
-                     <img src={item.url} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                     <img src={resolveUrl(item.url)} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   )}
                 </div>
                 <div style={{ padding: '20px' }}>
@@ -173,9 +180,9 @@ export default function Memories() {
           >
             <div onClick={e => e.stopPropagation()} style={{ maxWidth: '90%', maxHeight: '90%' }}>
               {selectedItem.type === 'video' ? (
-                <video src={selectedItem.url} controls autoPlay style={{ maxWidth: '100%', maxHeight: '80vh', borderRadius: '8px' }} />
+                <video src={resolveUrl(selectedItem.url)} controls autoPlay style={{ maxWidth: '100%', maxHeight: '80vh', borderRadius: '8px' }} />
               ) : (
-                <img src={selectedItem.url} alt={selectedItem.title} style={{ maxWidth: '100%', maxHeight: '80vh', borderRadius: '8px' }} />
+                <img src={resolveUrl(selectedItem.url)} alt={selectedItem.title} style={{ maxWidth: '100%', maxHeight: '80vh', borderRadius: '8px' }} />
               )}
               <h3 style={{ color: '#fff', textAlign: 'center', marginTop: '10px' }}>{selectedItem.title}</h3>
             </div>
@@ -184,4 +191,5 @@ export default function Memories() {
       </AnimatePresence>
     </motion.div>
   )
+
 }
